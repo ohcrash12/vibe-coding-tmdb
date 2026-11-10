@@ -1,5 +1,4 @@
-const API_KEY = window.TMDB_API_KEY;
-const API_URL = "https://api.themoviedb.org/3/movie/now_playing";
+const API_URL = "/api/now-playing";
 const POSTER_BASE = "https://image.tmdb.org/t/p/w342";
 const BACKDROP_BASE = "https://image.tmdb.org/t/p/w1280";
 
@@ -15,13 +14,7 @@ window.addEventListener("scroll", () => {
 });
 
 async function fetchPage(page) {
-  const params = new URLSearchParams({
-    api_key: API_KEY,
-    language: "ko-KR",
-    region: "KR",
-    page: String(page),
-  });
-  const response = await fetch(`${API_URL}?${params}`);
+  const response = await fetch(`${API_URL}?page=${page}`);
   if (!response.ok) {
     throw new Error("현재 상영작을 불러오지 못했습니다.");
   }
@@ -121,10 +114,6 @@ function escapeHtml(value) {
 
 async function init() {
   try {
-    if (!API_KEY || API_KEY === "YOUR_TMDB_API_KEY") {
-      throw new Error("config.js에 TMDB API 키를 설정해주세요. (config.example.js 참고)");
-    }
-
     const movies = await loadNowPlaying();
     if (movies.length === 0) {
       statusEl.textContent = "현재 상영 중인 영화가 없습니다.";
